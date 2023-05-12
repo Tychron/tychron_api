@@ -7,6 +7,8 @@ defmodule Tychron.API.V1 do
   alias Tychron.API.V1.ApiKeys
   alias Tychron.API.V1.Switches
   alias Tychron.API.V1.BulkDipTasks
+  alias Tychron.API.V1.DIDs
+  alias Tychron.API.V1.DID.Destinations, as: DidDestinations
 
   #
   # Carts
@@ -74,4 +76,20 @@ defmodule Tychron.API.V1 do
   defdelegate create_bulk_dip_task(params, options \\ []), to: BulkDipTasks
   defdelegate list_bulk_dip_tasks(query_params, options \\ []), to: BulkDipTasks
   defdelegate get_bulk_dip_task(bulk_dip_task_id, options \\ []), to: BulkDipTasks
+
+  #
+  # DIDs
+  #
+  defdelegate update_did(did_id_or_number, params, options \\ []), to: DIDs
+  defdelegate list_dids(query_params, options \\ []), to: DIDs
+  defdelegate get_did(did_id_or_number, options \\ []), to: DIDs
+
+  #
+  # DID Destinations
+  #
+  defdelegate create_did_destination(did_id_or_number, params, options \\ []), to: DidDestinations
+  defdelegate update_did_destination(did_id_or_number, destination_id, params, options \\ []), to: DidDestinations
+  defdelegate delete_did_destination(did_id_or_number, destination_id, options \\ []), to: DidDestinations
+  defdelegate list_did_destinations(query_params, options \\ []), to: DidDestinations
+  defdelegate get_did_destination(did_id_or_number, destination_id, options \\ []), to: DidDestinations
 end

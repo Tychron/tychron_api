@@ -83,6 +83,10 @@ defmodule Tychron.API.HttpContextBase do
     }}
   end
 
+  def maybe_decode_response_page({:error, _reason} = err, _map) do
+    err
+  end
+
   def maybe_decode_response_document(
     {:ok, %Response{status_code: status_code} = response, {:json, doc} = data},
     map

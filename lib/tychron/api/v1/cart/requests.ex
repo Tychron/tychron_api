@@ -10,7 +10,7 @@ defmodule Tychron.API.V1.Cart.Requests do
     doc = to_req_document(params, "cart")
     http_request(:post, "/api/v1/carts/#{cart_id}/requests", @no_query_params, @no_headers, {:json, doc}, options)
     |> maybe_decode_response_document(%{
-      201 => Tychron.M.Cart,
+      201 => Tychron.M.Cart.Request,
     })
   end
 
@@ -19,7 +19,7 @@ defmodule Tychron.API.V1.Cart.Requests do
     doc = to_req_document(params, "cart")
     http_request(:patch, "/api/v1/carts/#{cart_id}/requests/#{request_id}", @no_query_params, @no_headers, {:json, doc}, options)
     |> maybe_decode_response_document(%{
-      200 => Tychron.M.Cart,
+      200 => Tychron.M.Cart.Request,
     })
   end
 
@@ -27,15 +27,15 @@ defmodule Tychron.API.V1.Cart.Requests do
   def delete_cart_request(cart_id, request_id, options \\ []) do
     http_request(:delete, "/api/v1/carts/#{cart_id}/requests/#{request_id}", @no_query_params, @no_headers, nil, options)
     |> maybe_decode_response_document(%{
-      200 => Tychron.M.Cart,
+      200 => Tychron.M.Cart.Request,
     })
   end
 
   @spec list_cart_requests(cart_id(), map(), Keyword.t()) :: context_page_response(Tychron.M.Cart.Request.t())
   def list_cart_requests(cart_id, query_params, options \\ []) do
-    http_request(:get, "/api/v1/carts/#{cart_id}", query_params, @no_headers, nil, options)
+    http_request(:get, "/api/v1/carts/#{cart_id}/requests", query_params, @no_headers, nil, options)
     |> maybe_decode_response_page(%{
-      200 => Tychron.M.Cart,
+      200 => Tychron.M.Cart.Request,
     })
   end
 
@@ -43,7 +43,7 @@ defmodule Tychron.API.V1.Cart.Requests do
   def get_cart_request(cart_id, request_id, options \\ []) do
     http_request(:get, "/api/v1/carts/#{cart_id}/requests/#{request_id}", @no_query_params, @no_headers, nil, options)
     |> maybe_decode_response_document(%{
-      200 => Tychron.M.Cart,
+      200 => Tychron.M.Cart.Request,
     })
   end
 end
