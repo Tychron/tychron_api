@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.DID.Destinations do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type did_id_or_number :: Tychron.API.V1.DIDs.did_id_or_number()
 

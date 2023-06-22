@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.Switches do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type switch_id :: Ecto.UUID.t()
 

@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.ApiKeys do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type api_key_id :: Ecto.UUID.t()
 

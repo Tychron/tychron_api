@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.Requests do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type request_id :: Ecto.ULID.t()
 

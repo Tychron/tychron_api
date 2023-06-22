@@ -46,8 +46,8 @@ defmodule Tychron.API.HTTP.Client do
 
   @type http_response :: {:ok, Response.t(), response_doc()}
 
-  @spec http_request(method(), path(), query_params(), body(), request_options()) :: http_response()
-  def http_request(method, path, query_params, headers, body, options \\ []) do
+  @spec send_http_request(method(), path(), query_params(), body(), request_options()) :: http_response()
+  def send_http_request(method, path, query_params, headers, body, options \\ []) do
     options = patch_default_options(options)
     url = build_url(path, options)
 
@@ -81,10 +81,23 @@ defmodule Tychron.API.HTTP.Client do
 
   defp patch_default_options(options) do
     options =
+      options
+      |> Keyword.put_new(:endpoint_type, :api)
+
+    options =
       # add the default endpoint_url unless it already exists
       options
       |> Keyword.put_new_lazy(:endpoint_url, fn ->
-        Config.default_endpoint_url()
+        case options[:endpoint_type] do
+          :sms ->
+            Config.default_sms_endpoint_url()
+
+          :mms ->
+            Config.default_mms_endpoint_url()
+
+          _ ->
+            Config.default_api_endpoint_url()
+        end
       end)
 
     # check if the auth method exists
@@ -95,10 +108,25 @@ defmodule Tychron.API.HTTP.Client do
 
       :error ->
         # it doesn't exist, force the default auth
-        options
-        |> Keyword.put(:auth_method, Config.default_auth_method())
-        |> Keyword.put(:auth_identity, Config.default_auth_identity())
-        |> Keyword.put(:auth_secret, Config.default_auth_secret())
+        case options[:endpoint_type] do
+          :api ->
+            options
+            |> Keyword.put(:auth_method, Config.default_api_auth_method())
+            |> Keyword.put(:auth_identity, Config.default_api_auth_identity())
+            |> Keyword.put(:auth_secret, Config.default_api_auth_secret())
+
+          :mms ->
+            options
+            |> Keyword.put(:auth_method, Config.default_mms_auth_method())
+            |> Keyword.put(:auth_identity, Config.default_mms_auth_identity())
+            |> Keyword.put(:auth_secret, Config.default_mms_auth_secret())
+
+          :sms ->
+            options
+            |> Keyword.put(:auth_method, Config.default_sms_auth_method())
+            |> Keyword.put(:auth_identity, Config.default_sms_auth_identity())
+            |> Keyword.put(:auth_secret, Config.default_sms_auth_secret())
+        end
     end
   end
 

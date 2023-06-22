@@ -1,5 +1,6 @@
 defmodule Tychron.API.HttpContextBase do
-  defmacro __using__(_opts \\ []) do
+  defmacro __using__(opts \\ []) do
+    endpoint_type = opts[:endpoint_type]
     quote do
       alias Tychron.API.HTTP.Client
 
@@ -13,6 +14,11 @@ defmodule Tychron.API.HttpContextBase do
       @no_query_params []
 
       @no_headers []
+
+      def http_request(method, path, query_params, headers, body, options \\ []) do
+        options = Keyword.put(options, :endpoint_type, unquote(endpoint_type))
+        send_http_request(method, path, query_params, headers, body, options)
+      end
     end
   end
 
@@ -21,6 +27,10 @@ defmodule Tychron.API.HttpContextBase do
   @type context_response(t) :: {:ok, Tychron.M.DocumentResponse.t(t)} | {:error, term()}
 
   @type context_page_response(t) :: {:ok, Tychron.M.PageResponse.t(t)} | {:error, term()}
+
+  def set_endpoint_type(options, type) do
+    Keyword.put(options, :endpoint_type, type)
+  end
 
   def to_req_document(params) when is_map(params) do
     %{
@@ -63,7 +73,7 @@ defmodule Tychron.API.HttpContextBase do
   def maybe_decode_response_page(
     {:ok, %Response{status_code: status_code} = response, {:json, doc} = data},
     _map
-  ) when status_code == 400 or status_code == 422 do
+  ) when status_code in [400, 401, 403, 422] do
     %{
       "errors" => errors,
     } = doc
@@ -108,7 +118,67 @@ defmodule Tychron.API.HttpContextBase do
     end
   end
 
+  def maybe_decode_response_document(
+    {:ok, %Response{status_code: status_code} = response, {:json, doc} = data},
+    _map
+  ) when status_code in [400, 401, 403, 422] do
+    %{
+      "errors" => errors,
+    } = doc
+
+    errors =
+      Enum.map(errors, fn %{"code" => "invalid_parameter"} = error ->
+        Ecto.embedded_load(Tychron.M.Errors.InvalidParameter, error, :json)
+      end)
+
+    {:error, %Tychron.M.DocumentResponseError{
+      response: response,
+      response_data: data,
+      document: nil,
+      errors: errors,
+    }}
+  end
+
   def maybe_decode_response_document({:error, _reason} = err, _map) do
+    err
+  end
+
+  def maybe_decode_response(
+    {:ok, %Response{status_code: status_code} = response, {:json, doc}},
+    map
+  ) when status_code >= 200 and status_code < 300 and is_map(map) do
+    case Map.fetch(map, status_code) do
+      :error ->
+        {:error, {:unhandled_response, response, {:json, doc}}}
+
+      {:ok, schema} ->
+        item = Ecto.embedded_load(schema, doc, :json)
+
+        {:ok, item}
+    end
+  end
+
+  def maybe_decode_response(
+    {:ok, %Response{status_code: status_code} = response, {:json, doc} = data},
+    _map
+  ) when status_code in [400, 401, 403, 422] do
+    %{
+      "errors" => errors,
+    } = doc
+
+    errors =
+      Enum.map(errors, fn %{"code" => "invalid_parameter"} = error ->
+        Ecto.embedded_load(Tychron.M.Errors.InvalidParameter, error, :json)
+      end)
+
+    {:error, %Tychron.M.ResponseError{
+      response: response,
+      response_data: data,
+      errors: errors,
+    }}
+  end
+
+  def maybe_decode_response({:error, _reason} = err, _map) do
     err
   end
 end

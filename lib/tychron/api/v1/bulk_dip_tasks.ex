@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.BulkDipTasks do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type bulk_dip_task_id :: Ecto.UUID.t()
 

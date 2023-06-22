@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.Orders do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type order_id :: Ecto.ULID.t()
 

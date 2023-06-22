@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.Cart.Requests do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type cart_id :: Ecto.ULID.t()
 

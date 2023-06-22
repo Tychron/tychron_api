@@ -1,5 +1,5 @@
 defmodule Tychron.API.V1.Users do
-  use Tychron.API.HttpContextBase
+  use Tychron.API.HttpContextBase, endpoint_type: :api
 
   @type user_id :: Ecto.UUID.t()
 
