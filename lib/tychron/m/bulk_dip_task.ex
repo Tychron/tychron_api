@@ -27,6 +27,7 @@ defmodule Tychron.M.BulkDipTask do
       field :data, :string
 
       field :type, :string
+      field :filename, :string
       field :archive_format, :string
 
       field :status, :string
