@@ -31,6 +31,7 @@ defmodule Tychron.M.CallDataWebhook do
     field :data, :string
 
     field :auth_method, :string
+    field :auth_name, :string
     field :auth_identity, :string
     field :auth_secret, :string
 
@@ -45,6 +46,7 @@ defmodule Tychron.M.CallDataWebhook do
     name: String.t(),
     notes: String.t(),
     auth_method: String.t(),
+    auth_name: String.t(),
     auth_identity: String.t(),
     auth_secret: String.t(),
     custom_headers: [CustomHeader.t()],

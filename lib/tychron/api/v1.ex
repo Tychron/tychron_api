@@ -7,6 +7,7 @@ defmodule Tychron.API.V1 do
   alias Tychron.API.V1.ApiKeys
   alias Tychron.API.V1.Switches
   alias Tychron.API.V1.BulkDipTasks
+  alias Tychron.API.V1.CallDataWebhooks
   alias Tychron.API.V1.DIDs
   alias Tychron.API.V1.DID.Destinations, as: DidDestinations
 
@@ -76,6 +77,15 @@ defmodule Tychron.API.V1 do
   defdelegate create_bulk_dip_task(params, options \\ []), to: BulkDipTasks
   defdelegate list_bulk_dip_tasks(query_params, options \\ []), to: BulkDipTasks
   defdelegate get_bulk_dip_task(bulk_dip_task_id, options \\ []), to: BulkDipTasks
+
+  #
+  # Call Data Webhooks
+  #
+  defdelegate create_call_data_webhook(params, options \\ []), to: CallDataWebhooks
+  defdelegate update_call_data_webhook(call_data_webhook_id, params, options \\ []), to: CallDataWebhooks
+  defdelegate delete_call_data_webhook(call_data_webhook_id, params, options \\ []), to: CallDataWebhooks
+  defdelegate list_call_data_webhooks(query_params, options \\ []), to: CallDataWebhooks
+  defdelegate get_call_data_webhook(call_data_webhook_id, options \\ []), to: CallDataWebhooks
 
   #
   # DIDs

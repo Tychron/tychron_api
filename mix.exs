@@ -11,7 +11,9 @@ defmodule Tychron.API.MixProject do
         warnings_as_errors: true,
       ],
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      source_url: "https://github.com/Tychron/tychron_api",
+      homepage_url: "https://github.com/Tychron/tychron_api",
     ]
   end
 
